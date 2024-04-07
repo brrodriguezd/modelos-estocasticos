@@ -2,16 +2,22 @@ use core::f64;
 use std::f64::consts::SQRT_2;
 use std::io::stdin;
 use std::str::FromStr;
+//k debe ser menor que num, mayor o igual a 0
 fn factorial_especial(num: u32, k: u32) -> u32 {
     if num == k {
         return 1;
+    } else {
+        return factorial_especial(num - 1, k) * num;
     }
+}
+fn factorial(num: u32) -> u32 {
     match num {
         0 => 1,
         1 => 1,
-        _ => factorial_especial(num - 1, k) * num,
+        _ => factorial(num - 1) * num,
     }
 }
+/*
 fn potencia(num: u32, exponente: u32) -> u32 {
     match exponente {
         0 => 1,
@@ -19,6 +25,7 @@ fn potencia(num: u32, exponente: u32) -> u32 {
         _ => potencia(num, exponente - 1) * num,
     }
 }
+*/
 fn digitos_a_float(digitos: u8) -> f64 {
     //aproximación
     let mut num: f64 = 0.5;
@@ -29,13 +36,14 @@ fn digitos_a_float(digitos: u8) -> f64 {
 }
 fn main() {
     let mut estimacion_anterior: f64 = 0.0;
+    let mut valor_sumatoria_parcial: f64;
     let mut valor_sumatoria: f64 = 0.0;
-    let mut valor_sumatoria_parcial: f64 = 0.0;
-    let parte_constante: f64 = (2.0 * SQRT_2) / 9801.0;
+    let parte_constante: f64 = 9801.0 / (2.0 * SQRT_2);
     let mut estimacion_nueva: f64;
     let mut input = String::new();
     let digitos: u8;
     let comparador_digitos: f64;
+    //let mut all_sums: f64 = 0.0;
 
     println!("ingresa el número de dígitos");
     match stdin().read_line(&mut input) {
@@ -51,27 +59,32 @@ fn main() {
     };
     let mut k: u32 = 0;
     'calculo_pi: loop {
-        println!("factorial_especial 4k: {}", factorial_especial(4 * k, k));
-        println!("el resto: {}", (1103 + 26390 * k));
-        //para saltar la primera división
-        valor_sumatoria_parcial += f64::from(factorial_especial(4 * k, k));
-        //es 396^4k es muy grande
+        //println!("factorial_especial 4k: {}", factorial_especial(4 * k, k));
+        //println!("el resto: {}", (1103 + 26390 * k));
+        //de menor a mayor para más precisión
+        //en la primera el denominador es 1
         let mut cont = 0;
-        while cont < k {
-            //me salto la primera para evitar desfases por division entera
-            if cont != 0 {
-                valor_sumatoria_parcial /= f64::from(factorial_especial(k, 1))
+        valor_sumatoria_parcial = f64::from(1103 + 26390 * k);
+        while cont < 4 * k {
+            //396⁴ es demasiado grande, por eso subdividi todas las potencias y factoriales
+            if cont % k == 0 {
+                valor_sumatoria_parcial *=
+                    f64::from(factorial_especial((4 - cont / k) * k, (3 - cont / k) * k));
+                valor_sumatoria_parcial /= f64::from(factorial(k));
             }
-            valor_sumatoria_parcial /= f64::from(potencia(360, 3));
             valor_sumatoria_parcial /= 396.0;
             cont += 1;
         }
-        valor_sumatoria_parcial *= f64::from(1103 + 26390 * k);
+        //valor_sumatoria_parcial = 1.0 / valor_sumatoria_parcial;
+        println!("valor parcial: {:.}", valor_sumatoria_parcial);
         valor_sumatoria += valor_sumatoria_parcial;
-        estimacion_nueva = 1.0 / (parte_constante * valor_sumatoria);
-        println!("diferencia: {}", estimacion_nueva - estimacion_anterior);
+        println!("valor sumatoria: {:.}", valor_sumatoria);
+        //all_sums += valor_sumatoria_parcial;
+        //let promedio = all_sums / f64::from(k + 1);
+        estimacion_nueva = parte_constante / valor_sumatoria;
+        println!("diferencia: {:.}", estimacion_nueva - estimacion_anterior);
         if (estimacion_nueva - estimacion_anterior).abs() < comparador_digitos {
-            println!("valor de pi final: {}", estimacion_nueva);
+            println!("valor de pi final: {:.}", estimacion_nueva);
             break 'calculo_pi;
         }
         println!("valor de pi k:{} {}", k, estimacion_nueva);
