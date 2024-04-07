@@ -3,6 +3,8 @@ use std::f64::consts::SQRT_2;
 use std::io::stdin;
 use std::str::FromStr;
 use std::usize;
+
+mod numero_real;
 /*
  *FUNCIONA HASTA EL DÍGITO 15 (3.141592653589793)
 */
@@ -68,6 +70,34 @@ fn input() -> (usize, f64) {
 }
 
 fn main() {
+    /*PRUEBAS DEL TIPO NUMERO REAL
+        let numero1 = numero_real::NumeroReal::new(10.0, 7);
+        //9 digitos por lo que debería redondear el último
+        let numero2 = numero_real::NumeroReal::new(16.123412386, 8);
+        //todos los valores deben ser de 8 dígitos
+        println!("numero 1: {}, numero 2: {}", numero1, numero2);
+        //26.12341239;
+        println!("suma: {}", numero1 + numero2);
+        //6.12341239;
+        println!("resta: {}", numero1 - numero2);
+        // deberia ser 161.2341239 en vez de 161.23412386 por el redondeo y digitos que maneja
+        println!("multiplicación n1*n2: {}", numero1 * numero2);
+        println!("multiplicación n2*n1: {}", numero2 * numero1);
+        //este es el unico de 7 digitos porque n1 es de 7
+        println!("multiplicación n1*n1: {}", numero1 * numero1);
+        // deberia ser 1.61234124 en vez de 1.612341239 por el redondeo por sobrepasar dígitos
+        println!("division n1/n2: {}", numero1 / numero2);
+        //nose jasjja
+        println!("division n2/n1: {}", numero2 / numero1);
+        //1.00000000 8 dígitos
+        println!("division n2/n2: {}", numero2 / numero2);
+        //1.0000000 7 dígitos
+        println!("division n2/n2: {}", numero1 / numero1);
+        //10000.00000000
+        println!("10⁴: {}", numero1.potencia(4));
+        //nose
+        println!("n2⁴: {}", numero2.potencia(4));
+    */
     //variables para el cálculo
     let mut estimacion_anterior: f64 = 0.0;
     let mut valor_sumatoria: f64 = 0.0;
