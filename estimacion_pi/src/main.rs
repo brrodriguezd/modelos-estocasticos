@@ -63,7 +63,7 @@ fn input() -> (usize, f64) {
             return (digitos, comparador_digitos);
         }
         Err(error) => {
-            println!("bien't {}", error);
+            println!("Se encontro el siguiente error {}", error);
             panic!("Adiós");
         }
     };
